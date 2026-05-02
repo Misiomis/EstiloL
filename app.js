@@ -20,6 +20,11 @@ const FIREBASE_CONFIG = {
 };
 // ─────────────────────────────────────────────────────────────
 
+// ─── LOGIN ───────────────────────────────────────────────────
+const LOGIN_USER = "Noe Passarino";
+const LOGIN_PASS = "Npassarino2026";
+// ─────────────────────────────────────────────────────────────
+
 const USE_FIREBASE = true;
 
 // ============================================================
@@ -61,7 +66,7 @@ class FirestoreDB {
     const q = query(collection(this._db, this._col), orderBy("fechaCreacion", "desc"));
     return onSnapshot(q, snap => {
       cb(snap.docs.map(d => ({ id: d.id, ...d.data(), fechaCreacion: d.data().fechaCreacion?.toDate() ?? new Date() })));
-    }, err => { console.error("Firestore:", err); showToast("Error de conexión con Firebase", "err"); });
+    }, err => { console.error("Firestore:", err); showToast("Sin conexión con Firebase — usando datos locales", "info"); });
   }
   async add(data) {
     const ref = await addDoc(collection(this._db, this._col), { ...data, fechaCreacion: serverTimestamp() });
@@ -144,7 +149,6 @@ const sorteoList = $("sorteo-list");
 const btnPdf  = $("btn-pdf");
 const toastEl = $("toast");
 
-// Sorteo en Vivo
 const inpVivoNombre     = $("inp-vivo-nombre");
 const btnVivoAdd        = $("btn-vivo-add");
 const btnLimpiarVivo    = $("btn-limpiar-vivo");
@@ -161,21 +165,122 @@ const inpVivoPremio     = $("inp-vivo-premio");
 const btnRepetirVivo    = $("btn-repetir-vivo");
 const btnResetVivo      = $("btn-reset-vivo");
 
+const appEl          = $("app");
+const loginOverlay   = $("login-overlay");
+const loginForm      = $("login-form");
+const inpLoginUser   = $("inp-login-user");
+const inpLoginPass   = $("inp-login-pass");
+const loginError     = $("login-error");
+const btnEye         = $("btn-eye");
+
 // ============================================================
 //  UTILIDADES
 // ============================================================
 const esc = str => str ? String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) : "";
-const fmtPrice   = n => Number(n || 0).toLocaleString("es-AR");
+const fmtPrice    = n => Number(n || 0).toLocaleString("es-AR");
 const parsePrecio = s => parseFloat(String(s).replace(/[^0-9.]/g, "")) || 0;
-const fmtDate    = d => d ? d.toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long" }) : "";
-const fmtTime    = d => d ? d.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" }) : "--:--";
-const dateKey    = d => d instanceof Date ? d.toISOString().split("T")[0] : new Date().toISOString().split("T")[0];
+const fmtDate     = d => d ? d.toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long" }) : "";
+const fmtTime     = d => d ? d.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" }) : "--:--";
+const dateKey     = d => d instanceof Date ? d.toISOString().split("T")[0] : new Date().toISOString().split("T")[0];
 
 function showToast(msg, type = "info") {
   if (!toastEl) return;
   toastEl.textContent = msg;
   toastEl.className = `toast toast--show toast--${type}`;
-  setTimeout(() => toastEl.classList.remove("toast--show"), 3200);
+  setTimeout(() => toastEl.classList.remove("toast--show"), 3500);
+}
+
+// ============================================================
+//  SONIDO (Web Audio API — sin archivos externos)
+// ============================================================
+let audioCtx = null;
+
+function getAudio() {
+  if (!audioCtx) {
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+  }
+  return audioCtx;
+}
+
+function playTick(freq = 700) {
+  try {
+    const ctx = getAudio();
+    if (!ctx) return;
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.055);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.055);
+  } catch(e) {}
+}
+
+function playWinner() {
+  try {
+    const ctx = getAudio();
+    if (!ctx) return;
+    const notes = [523, 659, 784, 1047, 1319];
+    notes.forEach((freq, i) => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = "sine";
+      const t = ctx.currentTime + i * 0.13;
+      osc.frequency.setValueAtTime(freq, t);
+      gain.gain.setValueAtTime(0.28, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.38);
+      osc.start(t);
+      osc.stop(t + 0.38);
+    });
+  } catch(e) {}
+}
+
+// ============================================================
+//  LOGIN
+// ============================================================
+function setupLogin() {
+  if (localStorage.getItem("nyn_auth") === "ok") {
+    showApp();
+    return;
+  }
+
+  if (btnEye) {
+    btnEye.addEventListener("click", () => {
+      const isPass = inpLoginPass.type === "password";
+      inpLoginPass.type = isPass ? "text" : "password";
+      btnEye.querySelector("svg").style.opacity = isPass ? ".5" : "1";
+    });
+  }
+
+  if (loginForm) {
+    loginForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const user = inpLoginUser?.value.trim();
+      const pass = inpLoginPass?.value;
+      if (user === LOGIN_USER && pass === LOGIN_PASS) {
+        localStorage.setItem("nyn_auth", "ok");
+        loginOverlay.classList.add("login-out");
+        setTimeout(showApp, 400);
+      } else {
+        if (loginError) loginError.hidden = false;
+        if (inpLoginPass) {
+          inpLoginPass.classList.add("err");
+          setTimeout(() => inpLoginPass.classList.remove("err"), 1500);
+        }
+      }
+    });
+  }
+}
+
+function showApp() {
+  if (loginOverlay) loginOverlay.style.display = "none";
+  if (appEl)        appEl.hidden = false;
+  boot();
 }
 
 // ============================================================
@@ -313,7 +418,7 @@ function setupForm() {
       resetForm();
     } catch (err) {
       console.error(err);
-      showToast("Error al guardar. Revisá la conexión.", "err");
+      showToast("Error al guardar — revisá las reglas de Firestore", "err");
     } finally {
       setLoading(btnGuardar, false);
     }
@@ -380,7 +485,7 @@ window.handleAction = async function(action, id) {
 };
 
 // ============================================================
-//  BÚSQUEDA Y RENDER
+//  BÚSQUEDA Y RENDER (agrupado por día)
 // ============================================================
 function setupSearch() {
   if (inpSearch) {
@@ -423,11 +528,32 @@ function renderResults() {
   else if (activeFilter === "pagado") list = list.filter(v => v.estadoPago === "pagado" && !v.entregado);
 
   if (!list.length) {
-    resultsEl.innerHTML = `<div class="empty"><div class="empty-ico">🔍</div><p>No se encontraron pedidos</p></div>`;
+    resultsEl.innerHTML = searchQuery
+      ? `<div class="empty"><div class="empty-ico">😕</div><p>No se encontraron pedidos para "<strong>${esc(searchQuery)}</strong>"</p></div>`
+      : `<div class="empty"><div class="empty-ico">🔍</div><p>Buscá por nombre o filtrá por estado</p></div>`;
     return;
   }
+
+  // Agrupar por día
+  const byDate = {};
+  list.forEach(v => {
+    const k = dateKey(v.fechaCreacion);
+    if (!byDate[k]) byDate[k] = [];
+    byDate[k].push(v);
+  });
+
   resultsEl.innerHTML = "";
-  list.forEach(v => resultsEl.appendChild(buildCard(v)));
+  Object.keys(byDate).sort((a, b) => b.localeCompare(a)).forEach(dk => {
+    const sep = document.createElement("div");
+    sep.className = "day-sep";
+    const dayTotal = byDate[dk].reduce((s, v) => s + (v.precio || 0), 0);
+    sep.innerHTML = `
+      <span class="day-sep-label">${fmtDate(new Date(dk + "T12:00:00"))}</span>
+      <span class="day-sep-total">$${fmtPrice(dayTotal)}</span>
+    `;
+    resultsEl.appendChild(sep);
+    byDate[dk].forEach(v => resultsEl.appendChild(buildCard(v)));
+  });
 }
 
 function buildCard(v) {
@@ -596,12 +722,13 @@ function renderSorteos() {
 }
 
 // ============================================================
-//  SORTEO EN VIVO
+//  SORTEO EN VIVO (con sonido)
 // ============================================================
 function setupSorteoVivo() {
   if (!btnVivoAdd) return;
   let participantes = [];
   let ganadorActual = null;
+  let tickFreq      = 700;
 
   function addParticipante() {
     const nom = inpVivoNombre?.value.trim();
@@ -648,10 +775,18 @@ function setupSorteoVivo() {
     if (vivoRuletaTot)  vivoRuletaTot.textContent = participantes.length;
     if (btnVivoStart)   btnVivoStart.disabled  = true;
 
+    tickFreq = 700;
     let i = 0;
+    let tickCount = 0;
+
     const interval = setInterval(() => {
       if (vivoRuletaNom) vivoRuletaNom.textContent = participantes[i % participantes.length];
       i++;
+      tickCount++;
+      // Tocar sonido cada 2 iteraciones (evitar saturar)
+      if (tickCount % 2 === 0) playTick(tickFreq);
+      // El sonido se hace más lento al final
+      if (tickCount > 20) tickFreq = Math.max(300, tickFreq - 15);
     }, 100);
 
     setTimeout(() => {
@@ -662,10 +797,11 @@ function setupSorteoVivo() {
       if (vivoGanadorNom) vivoGanadorNom.textContent = ganadorActual;
       if (inpVivoPremio)  inpVivoPremio.value = "";
       if (btnVivoStart)   btnVivoStart.disabled = participantes.length < 2;
+      playWinner();
     }, 3000);
   }
 
-  if (btnVivoStart)   btnVivoStart.onclick   = iniciarSorteo;
+  if (btnVivoStart) btnVivoStart.onclick = iniciarSorteo;
 
   if (btnRepetirVivo) {
     btnRepetirVivo.onclick = () => {
@@ -712,4 +848,4 @@ function setupSorteoVivo() {
 // ============================================================
 //  INIT
 // ============================================================
-document.addEventListener("DOMContentLoaded", boot);
+document.addEventListener("DOMContentLoaded", setupLogin);

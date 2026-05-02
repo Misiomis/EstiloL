@@ -1,0 +1,27 @@
+{
+  "name": "NyN Ventas",
+  "short_name": "Ventas",
+  "description": "Gestión de ventas en vivo — NyN Novedades de Noe Passarino",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#060a0a",
+  "theme_color": "#00C4BB",
+  "icons": [
+    {
+      "src": "img/559e3a2c-1ca5-456e-a727-3a6afac768eb.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "img/559e3a2c-1ca5-456e-a727-3a6afac768eb.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["business", "utilities"],
+  "lang": "es-AR"
+}

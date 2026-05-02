@@ -5,30 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#080a0a">
-  <title>NyN Novedades — Ventas en Vivo</title>
+  <meta name="apple-mobile-web-app-title" content="Ventas">
+  <meta name="theme-color" content="#00C4BB">
+  <meta name="description" content="Gestión de ventas en vivo — NyN Novedades">
+  <title>NyN — Ventas en Vivo</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="img/559e3a2c-1ca5-456e-a727-3a6afac768eb.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+  <!-- Fondo ambiental -->
+  <div class="bg-glow" aria-hidden="true"></div>
+
   <!-- ══════════ LOGIN ══════════ -->
   <div class="login-overlay" id="login-overlay">
     <div class="login-card">
-      <img class="login-logo" src="img/559e3a2c-1ca5-456e-a727-3a6afac768eb.jpg" alt="NyN Novedades">
+      <div class="login-logo-wrap">
+        <img class="login-logo" src="img/559e3a2c-1ca5-456e-a727-3a6afac768eb.jpg" alt="NyN Novedades">
+        <div class="login-logo-ring"></div>
+      </div>
       <h1 class="login-title">Iniciar Sesión</h1>
       <p class="login-subtitle">NyN de Noe Passarino</p>
       <form class="login-form" id="login-form" autocomplete="off" novalidate>
         <div class="field">
           <label class="lbl" for="inp-login-user">Usuario</label>
-          <input class="inp" type="text" id="inp-login-user" placeholder="Nombre de usuario" autocomplete="username" autocapitalize="words">
+          <input class="inp" type="text" id="inp-login-user" placeholder="Nombre de usuario" autocapitalize="words">
         </div>
         <div class="field">
           <label class="lbl" for="inp-login-pass">Contraseña</label>
           <div class="pass-wrap">
-            <input class="inp" type="password" id="inp-login-pass" placeholder="Contraseña" autocomplete="current-password">
+            <input class="inp" type="password" id="inp-login-pass" placeholder="••••••••••••">
             <button class="btn-eye" id="btn-eye" type="button" aria-label="Ver contraseña">
               <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
@@ -64,7 +74,7 @@
           <span class="hstat-num" id="stat-pending">0</span>
           <span class="hstat-lbl">Pendientes</span>
         </div>
-        <div class="hstat hstat-delivered-stat">
+        <div class="hstat hstat-ok">
           <span class="hstat-num" id="stat-entregados">0</span>
           <span class="hstat-lbl">Entregados</span>
         </div>
@@ -74,27 +84,27 @@
     <!-- ══════════ TABS ══════════ -->
     <nav class="tabs" role="tablist">
       <button class="tab active" role="tab" aria-selected="true" data-tab="nueva">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Nueva venta
       </button>
       <button class="tab" role="tab" aria-selected="false" data-tab="buscar">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         Buscar compras
       </button>
-      <button class="tab tab--delivered-tab" role="tab" aria-selected="false" data-tab="entregados">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      <button class="tab" role="tab" aria-selected="false" data-tab="entregados">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
         Compras entregadas
       </button>
       <button class="tab" role="tab" aria-selected="false" data-tab="resumen">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         Resumen
       </button>
       <button class="tab tab--raffle" role="tab" aria-selected="false" data-tab="sorteo">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         Ganadores
       </button>
       <button class="tab tab--vivo" role="tab" aria-selected="false" data-tab="sorteo-vivo">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
         Sorteo en vivo
       </button>
     </nav>
@@ -116,14 +126,12 @@
 
           <div class="field">
             <label class="lbl" for="inp-cliente">Nombre Cliente <span class="req">*</span></label>
-            <input class="inp" type="text" id="inp-cliente" placeholder="Ej: Romina García"
-              autocapitalize="words" autocomplete="off" required>
+            <input class="inp" type="text" id="inp-cliente" placeholder="Ej: Romina García" autocapitalize="words" autocomplete="off" required>
           </div>
 
           <div class="field">
             <label class="lbl" for="inp-telefono">Teléfono <span class="opt">— opcional</span></label>
-            <input class="inp" type="tel" id="inp-telefono"
-              placeholder="Ej: 11 5555-1234" inputmode="tel" autocomplete="off">
+            <input class="inp" type="tel" id="inp-telefono" placeholder="Ej: 11 5555-1234" inputmode="tel">
           </div>
 
           <div class="field">
@@ -140,7 +148,7 @@
                 <option value="Buzo">Buzo</option>
                 <option value="Accesorio">Accesorio</option>
               </select>
-              <svg class="sel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"/></svg>
+              <svg class="sel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
           </div>
 
@@ -166,7 +174,7 @@
                 <option value="Pañuelo">Pañuelo</option>
                 <option value="Otro">Otro…</option>
               </select>
-              <svg class="sel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"/></svg>
+              <svg class="sel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
           </div>
 
@@ -183,7 +191,7 @@
                 <option value="Niño">Niño</option>
                 <option value="Adulto">Adulto</option>
               </select>
-              <svg class="sel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"/></svg>
+              <svg class="sel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
           </div>
 
@@ -202,8 +210,7 @@
             <label class="lbl" for="inp-precio">Precio <span class="req">*</span></label>
             <div class="prefix-wrap">
               <span class="prefix">$</span>
-              <input class="inp inp-price" type="text" id="inp-precio"
-                placeholder="Ej: 22000" inputmode="decimal" autocomplete="off" required>
+              <input class="inp inp-price" type="text" id="inp-precio" placeholder="15000 ó 15.000" inputmode="decimal" autocomplete="off" required>
             </div>
           </div>
 
@@ -229,26 +236,22 @@
       </div>
     </section>
 
-    <!-- ══════════ PANEL: Buscar compras ══════════ -->
+    <!-- ══════════ PANEL: Buscar ══════════ -->
     <section class="panel" id="panel-buscar" role="tabpanel">
       <div class="panel-inner">
         <h1 class="panel-title">Buscar compras</h1>
-
         <div class="search-wrap">
           <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input class="search-inp" type="search" id="inp-search"
-            placeholder="Escribí el nombre del cliente…" autocomplete="off">
+          <input class="search-inp" type="search" id="inp-search" placeholder="Nombre del cliente…" autocomplete="off">
           <button class="search-clear" id="btn-search-clear" aria-label="Limpiar" hidden>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
-
         <div class="chips" role="group">
           <button class="chip chip--active" data-filter="todos">Todos</button>
           <button class="chip chip--pending" data-filter="pendiente">Pendientes</button>
           <button class="chip chip--paid" data-filter="pagado">Pagados</button>
         </div>
-
         <div id="results" role="list" aria-live="polite">
           <div class="empty">
             <div class="empty-ico">🔍</div>
@@ -258,7 +261,7 @@
       </div>
     </section>
 
-    <!-- ══════════ PANEL: Compras Entregadas ══════════ -->
+    <!-- ══════════ PANEL: Entregados ══════════ -->
     <section class="panel" id="panel-entregados" role="tabpanel">
       <div class="panel-inner">
         <h1 class="panel-title">📦 Compras entregadas</h1>
@@ -271,13 +274,13 @@
       </div>
     </section>
 
-    <!-- ══════════ PANEL: Resumen Diario ══════════ -->
+    <!-- ══════════ PANEL: Resumen ══════════ -->
     <section class="panel" id="panel-resumen" role="tabpanel">
       <div class="panel-inner">
         <div class="resumen-top">
           <h1 class="panel-title">Resumen por Día</h1>
-          <button class="btn-pdf" id="btn-pdf" title="Descargar PDF del día">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <button class="btn-pdf" id="btn-pdf">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             PDF
           </button>
         </div>
@@ -294,27 +297,23 @@
     <section class="panel" id="panel-sorteo" role="tabpanel">
       <div class="panel-inner">
         <h1 class="panel-title">🏆 Ganadores del Sorteo</h1>
-
         <form id="form-sorteo" novalidate autocomplete="off" class="sorteo-form">
           <div class="sorteo-fields">
             <div class="field" style="flex:1">
               <label class="lbl" for="inp-ganador">Ganador <span class="req">*</span></label>
-              <input class="inp" type="text" id="inp-ganador"
-                placeholder="Nombre del ganador…" autocapitalize="words" required>
+              <input class="inp" type="text" id="inp-ganador" placeholder="Nombre del ganador…" autocapitalize="words" required>
             </div>
             <div class="field" style="flex:1">
               <label class="lbl" for="inp-premio">Premio <span class="req">*</span></label>
-              <input class="inp" type="text" id="inp-premio"
-                placeholder="Ej: Remera T:M roja…" autocapitalize="words" required>
+              <input class="inp" type="text" id="inp-premio" placeholder="Ej: Remera T:M roja…" autocapitalize="words" required>
             </div>
           </div>
           <button type="submit" class="btn-primary btn-sorteo" id="btn-sorteo">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             <span class="btn-lbl">Registrar Ganador</span>
             <svg class="btn-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg>
           </button>
         </form>
-
         <div id="sorteo-list" role="list" aria-live="polite">
           <div class="empty">
             <div class="empty-ico">🏆</div>
@@ -332,16 +331,14 @@
         <div class="field">
           <label class="lbl">Agregar Participante</label>
           <div class="vivo-add-row">
-            <input class="inp" type="text" id="inp-vivo-nombre"
-              placeholder="Nombre del participante…"
-              autocomplete="off" autocapitalize="words">
+            <input class="inp" type="text" id="inp-vivo-nombre" placeholder="Nombre del participante…" autocomplete="off" autocapitalize="words">
             <button class="btn-vivo-add" id="btn-vivo-add" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </button>
           </div>
         </div>
 
-        <div class="vivo-participantes-wrap" id="vivo-wrap">
+        <div class="vivo-participantes-wrap">
           <div class="vivo-meta">
             <span class="vivo-meta-lbl">Participantes: <strong id="vivo-count">0</strong></span>
             <button class="btn-limpiar-vivo" id="btn-limpiar-vivo" type="button">Limpiar todo</button>
@@ -352,7 +349,7 @@
         </div>
 
         <button class="btn-primary btn-vivo-start" id="btn-vivo-start" type="button" disabled>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           <span class="btn-lbl">¡INICIAR SORTEO!</span>
           <svg class="btn-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg>
         </button>
@@ -363,26 +360,17 @@
         </div>
 
         <div class="vivo-ganador-box" id="vivo-ganador-box" hidden>
-          <div class="vivo-confetti">🏆</div>
+          <div class="vivo-confetti-emoji">🏆</div>
           <p class="vivo-ganador-label">¡EL GANADOR ES!</p>
           <div class="vivo-ganador-nombre" id="vivo-ganador-nombre"></div>
-
           <div class="field vivo-premio-field">
             <label class="lbl">Premio <span class="opt">— opcional</span></label>
-            <input class="inp" type="text" id="inp-vivo-premio"
-              placeholder="Ej: Remera T:M roja…" autocapitalize="words">
+            <input class="inp" type="text" id="inp-vivo-premio" placeholder="Ej: Remera T:M roja…" autocapitalize="words">
           </div>
-
           <div class="vivo-ganador-actions">
-            <button class="btn-aceptar-ganador" id="btn-aceptar-ganador" type="button">
-              ✅ Aceptar ganador
-            </button>
-            <button class="btn-repetir-vivo" id="btn-repetir-vivo" type="button">
-              🔄 Volver a sortear
-            </button>
-            <button class="btn-reset-vivo" id="btn-reset-vivo" type="button">
-              ✨ Nuevo sorteo
-            </button>
+            <button class="btn-aceptar-ganador" id="btn-aceptar-ganador" type="button">✅ Aceptar ganador</button>
+            <button class="btn-repetir-vivo" id="btn-repetir-vivo" type="button">🔄 Volver a sortear</button>
+            <button class="btn-reset-vivo" id="btn-reset-vivo" type="button">✨ Nuevo sorteo</button>
           </div>
         </div>
 

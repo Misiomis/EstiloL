@@ -178,7 +178,12 @@ const btnEye         = $("btn-eye");
 // ============================================================
 const esc = str => str ? String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) : "";
 const fmtPrice    = n => Number(n || 0).toLocaleString("es-AR");
-const parsePrecio = s => parseFloat(String(s).replace(/[^0-9.]/g, "")) || 0;
+const parsePrecio = s => {
+  const str = String(s).replace(/[$\s]/g, '').trim();
+  if (/^\d{1,3}(\.\d{3})+$/.test(str)) return Number(str.replace(/\./g, ''));
+  if (/^\d{1,3}(,\d{3})+$/.test(str))  return Number(str.replace(/,/g, ''));
+  return parseFloat(str.replace(/[^\d.]/g, '')) || 0;
+};
 const fmtDate     = d => d ? d.toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long" }) : "";
 const fmtTime     = d => d ? d.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" }) : "--:--";
 const dateKey     = d => d instanceof Date ? d.toISOString().split("T")[0] : new Date().toISOString().split("T")[0];
@@ -241,6 +246,28 @@ function playWinner() {
 }
 
 // ============================================================
+//  CONFETTI
+// ============================================================
+function launchConfetti() {
+  const layer = document.createElement("div");
+  layer.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:9997;overflow:hidden;";
+  document.body.appendChild(layer);
+  const colors = ["#00C4BB","#FFCC00","#ff6b6b","#4ade80","#a78bfa","#f472b6","#ffffff","#D4AA00"];
+  for (let i = 0; i < 130; i++) {
+    const p     = document.createElement("div");
+    const color = colors[i % colors.length];
+    const size  = 4 + Math.random() * 8;
+    const left  = Math.random() * 100;
+    const delay = Math.random() * 1.2;
+    const dur   = 2.2 + Math.random() * 1.8;
+    const shape = Math.random() > 0.4 ? "50%" : "2px";
+    p.style.cssText = `position:absolute;width:${size}px;height:${size}px;background:${color};left:${left}%;top:-12px;border-radius:${shape};animation:confettiFall ${dur}s ${delay}s ease-in forwards;`;
+    layer.appendChild(p);
+  }
+  setTimeout(() => layer.remove(), 4800);
+}
+
+// ============================================================
 //  LOGIN
 // ============================================================
 function setupLogin() {
@@ -280,6 +307,7 @@ function setupLogin() {
 function showApp() {
   if (loginOverlay) loginOverlay.style.display = "none";
   if (appEl)        appEl.hidden = false;
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
   boot();
 }
 
@@ -798,6 +826,7 @@ function setupSorteoVivo() {
       if (inpVivoPremio)  inpVivoPremio.value = "";
       if (btnVivoStart)   btnVivoStart.disabled = participantes.length < 2;
       playWinner();
+      launchConfetti();
     }, 3000);
   }
 

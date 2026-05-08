@@ -1,4 +1,4 @@
-const CACHE = 'estilo-libertad-v1';
+const CACHE = 'estilo-libertad-v3';
 const ASSETS = [
   './',
   './index.html',

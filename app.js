@@ -1,5 +1,5 @@
 // ============================================================
-//  NyN Novedades — Gestión de Ventas en Vivo
+//  Estilo Libertad — Gestión de Ventas en Vivo
 // ============================================================
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";

@@ -21,8 +21,8 @@ const FIREBASE_CONFIG = {
 // ─────────────────────────────────────────────────────────────
 
 // ─── LOGIN ───────────────────────────────────────────────────
-const LOGIN_USER = "Noe Passarino";
-const LOGIN_PASS = "Npassarino2026";
+const LOGIN_USER = "Estilo Libertad";
+const LOGIN_PASS = "Libertad2026";
 // ─────────────────────────────────────────────────────────────
 
 const USE_FIREBASE = true;
@@ -252,7 +252,7 @@ function launchConfetti() {
   const layer = document.createElement("div");
   layer.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:9997;overflow:hidden;";
   document.body.appendChild(layer);
-  const colors = ["#00C4BB","#FFCC00","#ff6b6b","#4ade80","#a78bfa","#f472b6","#ffffff","#D4AA00"];
+  const colors = ["#8BAF86","#D4BC98","#B0CCA9","#ffffff","#5A7A56","#E8DDD0","#6dcf6d","#A8906E"];
   for (let i = 0; i < 130; i++) {
     const p     = document.createElement("div");
     const color = colors[i % colors.length];
@@ -750,13 +750,14 @@ function renderSorteos() {
 }
 
 // ============================================================
-//  SORTEO EN VIVO (con sonido)
+//  SORTEO EN VIVO (con sonido y exclusión de ganadores)
 // ============================================================
 function setupSorteoVivo() {
   if (!btnVivoAdd) return;
   let participantes = [];
   let ganadorActual = null;
-  let tickFreq      = 700;
+  let ganadoresSesion = new Set(); // excluidos en tandas de repetición
+  let tickFreq = 700;
 
   function addParticipante() {
     const nom = inpVivoNombre?.value.trim();
@@ -779,28 +780,38 @@ function setupSorteoVivo() {
     btnLimpiarVivo.onclick = () => {
       participantes = [];
       ganadorActual = null;
+      ganadoresSesion = new Set();
       renderParticipantes();
     };
   }
 
   function renderParticipantes() {
     if (!vivoLista) return;
+    const elegibles = participantes.filter(p => !ganadoresSesion.has(p));
     if (participantes.length === 0) {
       vivoLista.innerHTML = `<p class="vivo-empty-hint">Agregá al menos 2 participantes para sortear</p>`;
     } else {
-      vivoLista.innerHTML = participantes.map((p, i) =>
-        `<div class="vivo-item">${i + 1}. ${esc(p)}</div>`
-      ).join("");
+      vivoLista.innerHTML = participantes.map((p, i) => {
+        const yaGano = ganadoresSesion.has(p);
+        return `<div class="vivo-item${yaGano ? " vivo-item--ganado" : ""}">${i + 1}. ${esc(p)}${yaGano ? " ✓" : ""}</div>`;
+      }).join("");
     }
     if (vivoCount)    vivoCount.textContent  = participantes.length;
-    if (btnVivoStart) btnVivoStart.disabled  = participantes.length < 2;
+    if (btnVivoStart) btnVivoStart.disabled  = elegibles.length < 2;
   }
 
   function iniciarSorteo() {
-    if (participantes.length < 2) return;
+    const elegibles = participantes.filter(p => !ganadoresSesion.has(p));
+    if (elegibles.length < 1) {
+      showToast("¡Todos los participantes ya ganaron en esta tanda!", "info");
+      return;
+    }
+    if (elegibles.length < 2) {
+      showToast(`Solo queda ${elegibles[0]} — será el ganador`, "info");
+    }
     if (vivoGanadorBox) vivoGanadorBox.hidden = true;
     if (vivoRuletaBox)  vivoRuletaBox.hidden  = false;
-    if (vivoRuletaTot)  vivoRuletaTot.textContent = participantes.length;
+    if (vivoRuletaTot)  vivoRuletaTot.textContent = elegibles.length;
     if (btnVivoStart)   btnVivoStart.disabled  = true;
 
     tickFreq = 700;
@@ -808,23 +819,22 @@ function setupSorteoVivo() {
     let tickCount = 0;
 
     const interval = setInterval(() => {
-      if (vivoRuletaNom) vivoRuletaNom.textContent = participantes[i % participantes.length];
+      if (vivoRuletaNom) vivoRuletaNom.textContent = elegibles[i % elegibles.length];
       i++;
       tickCount++;
-      // Tocar sonido cada 2 iteraciones (evitar saturar)
       if (tickCount % 2 === 0) playTick(tickFreq);
-      // El sonido se hace más lento al final
       if (tickCount > 20) tickFreq = Math.max(300, tickFreq - 15);
     }, 100);
 
     setTimeout(() => {
       clearInterval(interval);
-      ganadorActual = participantes[Math.floor(Math.random() * participantes.length)];
+      ganadorActual = elegibles[Math.floor(Math.random() * elegibles.length)];
+      ganadoresSesion.add(ganadorActual);
       if (vivoRuletaBox)  vivoRuletaBox.hidden  = true;
       if (vivoGanadorBox) vivoGanadorBox.hidden  = false;
       if (vivoGanadorNom) vivoGanadorNom.textContent = ganadorActual;
       if (inpVivoPremio)  inpVivoPremio.value = "";
-      if (btnVivoStart)   btnVivoStart.disabled = participantes.length < 2;
+      renderParticipantes();
       playWinner();
       launchConfetti();
     }, 3000);
@@ -851,6 +861,7 @@ function setupSorteoVivo() {
         if (vivoGanadorBox) vivoGanadorBox.hidden = true;
         ganadorActual = null;
         participantes = [];
+        ganadoresSesion = new Set();
         renderParticipantes();
         switchTab("sorteo");
       } catch (err) {
@@ -869,6 +880,7 @@ function setupSorteoVivo() {
       if (vivoRuletaBox)  vivoRuletaBox.hidden  = true;
       ganadorActual = null;
       participantes = [];
+      ganadoresSesion = new Set();
       renderParticipantes();
     };
   }

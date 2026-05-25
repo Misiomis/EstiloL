@@ -164,6 +164,8 @@ const btnAceptarGanador = $("btn-aceptar-ganador");
 const inpVivoPremio     = $("inp-vivo-premio");
 const btnRepetirVivo    = $("btn-repetir-vivo");
 const btnResetVivo      = $("btn-reset-vivo");
+const btnRetomarVivo    = $("btn-retomar-vivo");
+const vivoBorradorCount = $("vivo-borrador-count");
 
 const appEl          = $("app");
 const loginOverlay   = $("login-overlay");
@@ -758,6 +760,17 @@ function renderSorteos() {
 // ============================================================
 //  SORTEO EN VIVO (con sonido y exclusión de ganadores)
 // ============================================================
+const BORRADOR_KEY = "cvfc_vivo_borrador";
+function guardarBorrador(lista) {
+  if (lista.length > 0) localStorage.setItem(BORRADOR_KEY, JSON.stringify(lista));
+}
+function cargarBorrador() {
+  try {
+    const datos = JSON.parse(localStorage.getItem(BORRADOR_KEY) || "[]");
+    return Array.isArray(datos) ? datos.filter(n => typeof n === "string" && n.trim()) : [];
+  } catch { return []; }
+}
+
 function setupSorteoVivo() {
   if (!btnVivoAdd) return;
   let participantes = [];
@@ -796,6 +809,23 @@ function setupSorteoVivo() {
     };
   }
 
+  if (btnRetomarVivo) {
+    btnRetomarVivo.onclick = () => {
+      participantes = cargarBorrador().filter(n => !esExcluido(n));
+      ganadoresSesion = new Set();
+      renderParticipantes();
+    };
+  }
+
+  actualizarBtnRetomar();
+
+  function actualizarBtnRetomar() {
+    const borrador = cargarBorrador();
+    const mostrar = participantes.length === 0 && borrador.length > 0;
+    if (btnRetomarVivo) btnRetomarVivo.hidden = !mostrar;
+    if (vivoBorradorCount) vivoBorradorCount.textContent = borrador.length;
+  }
+
   function renderParticipantes() {
     if (!vivoLista) return;
     const elegibles = participantes.filter(p => !ganadoresSesion.has(p) && !esExcluido(p));
@@ -809,6 +839,8 @@ function setupSorteoVivo() {
     }
     if (vivoCount)    vivoCount.textContent  = participantes.length;
     if (btnVivoStart) btnVivoStart.disabled  = elegibles.length < 2;
+    if (participantes.length > 0) guardarBorrador(participantes);
+    actualizarBtnRetomar();
   }
 
   function iniciarSorteo() {

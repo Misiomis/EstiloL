@@ -910,6 +910,25 @@ body {
 }
 .btn-limpiar-vivo:hover { color: var(--danger); }
 
+.btn-retomar-vivo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  background: var(--sage-pale);
+  border: 1.5px dashed var(--sage);
+  border-radius: var(--radius);
+  color: var(--sage-dark);
+  font-family: var(--font);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--t), border-color var(--t);
+}
+.btn-retomar-vivo:hover { background: var(--sage-light); border-style: solid; }
+
 .vivo-lista {
   padding: 12px 16px;
   display: flex;

@@ -1,7 +1,7 @@
 {
-  "name": "Estilo Libertad Ventas",
+  "name": "Central Variedades & Farmacia Central",
   "short_name": "Ventas",
-  "description": "Gestión de ventas en vivo — Estilo Libertad",
+  "description": "Gestión de ventas en vivo — Central Variedades & Farmacia Central",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

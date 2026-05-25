@@ -1,5 +1,5 @@
 // ============================================================
-//  Estilo Libertad — Gestión de Ventas en Vivo
+//  Central Variedades & Farmacia Central — Gestión de Ventas en Vivo
 // ============================================================
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -21,7 +21,7 @@ const FIREBASE_CONFIG = {
 // ─────────────────────────────────────────────────────────────
 
 // ─── LOGIN ───────────────────────────────────────────────────
-const LOGIN_USER = "Estilo Libertad";
+const LOGIN_USER = "Central Variedades";
 const LOGIN_PASS = "Libertad2026";
 // ─────────────────────────────────────────────────────────────
 
@@ -697,6 +697,11 @@ function renderEntregados() {
 }
 
 // ============================================================
+//  SORTEOS — EXCLUSIÓN PERMANENTE
+// ============================================================
+const EXCLUIDOS_SORTEO = new Set(["adriana cerri"]);
+function esExcluido(nombre) { return EXCLUIDOS_SORTEO.has(nombre.trim().toLowerCase()); }
+
 //  SORTEOS — FORMULARIO MANUAL
 // ============================================================
 function setupSorteoForm() {
@@ -709,6 +714,7 @@ function setupSorteoForm() {
       showToast("Completá ganador y premio", "err");
       return;
     }
+    if (esExcluido(ganador)) { formSorteo.reset(); return; }
     setLoading(btnSorteo, true);
     try {
       await storageSort.add({ ganador, premio });
@@ -762,6 +768,11 @@ function setupSorteoVivo() {
   function addParticipante() {
     const nom = inpVivoNombre?.value.trim();
     if (!nom) return;
+    if (esExcluido(nom)) {
+      if (inpVivoNombre) inpVivoNombre.value = "";
+      inpVivoNombre?.focus();
+      return;
+    }
     participantes.push(nom);
     if (inpVivoNombre) inpVivoNombre.value = "";
     inpVivoNombre?.focus();
@@ -787,7 +798,7 @@ function setupSorteoVivo() {
 
   function renderParticipantes() {
     if (!vivoLista) return;
-    const elegibles = participantes.filter(p => !ganadoresSesion.has(p));
+    const elegibles = participantes.filter(p => !ganadoresSesion.has(p) && !esExcluido(p));
     if (participantes.length === 0) {
       vivoLista.innerHTML = `<p class="vivo-empty-hint">Agregá al menos 2 participantes para sortear</p>`;
     } else {
@@ -801,7 +812,7 @@ function setupSorteoVivo() {
   }
 
   function iniciarSorteo() {
-    const elegibles = participantes.filter(p => !ganadoresSesion.has(p));
+    const elegibles = participantes.filter(p => !ganadoresSesion.has(p) && !esExcluido(p));
     if (elegibles.length < 1) {
       showToast("¡Todos los participantes ya ganaron en esta tanda!", "info");
       return;

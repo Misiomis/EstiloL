@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Contacto WhatsApp</title>
+<style>
+  /* Layout: una sola columna centrada de 600px; título grande, lista de contactos tipo iOS y una tarjeta oscura para el alias de pago. */
+  :root {
+    --bg: #f5f5f7;
+    --surface: #ffffff;
+    --txt: #1d1d1f;
+    --txt-2: #6e6e73;
+    --line: #e5e5ea;
+    --accent: #0071e3;
+    --accent-hover: #0077ed;
+    --on-accent: #ffffff;
+    --press: #f2f2f5;
+    --wash: rgba(52, 199, 89, .16);
+    --wash-2: rgba(10, 132, 255, .10);
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.05);
+    --msg-green: #34c759;
+    --card-1: #1d1d1f;
+    --card-2: #2b2b30;
+    --card-txt: #f5f5f7;
+    --card-txt-2: #a1a1a6;
+    --card-btn: #ffffff;
+    --card-btn-txt: #1d1d1f;
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI Variable Display", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #000000;
+      --surface: #1c1c1e;
+      --txt: #f5f5f7;
+      --txt-2: #a1a1a6;
+      --line: #2c2c2e;
+      --accent: #2997ff;
+      --accent-hover: #4aa8ff;
+      --on-accent: #000000;
+      --press: #2c2c2e;
+      --wash: rgba(48, 209, 88, .16);
+      --wash-2: rgba(10, 132, 255, .14);
+      --shadow: none;
+      --card-1: #2c2c2e;
+      --card-2: #1c1c1e;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #000000;
+    --surface: #1c1c1e;
+    --txt: #f5f5f7;
+    --txt-2: #a1a1a6;
+    --line: #2c2c2e;
+    --accent: #2997ff;
+    --accent-hover: #4aa8ff;
+    --on-accent: #000000;
+    --press: #2c2c2e;
+    --wash: rgba(48, 209, 88, .16);
+    --wash-2: rgba(10, 132, 255, .14);
+    --shadow: none;
+    --card-1: #2c2c2e;
+    --card-2: #1c1c1e;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin:0;
+    background: var(--bg);
+    background-image:
+      radial-gradient(60% 40% at 15% 0%, var(--wash), transparent 70%),
+      radial-gradient(50% 35% at 90% 5%, var(--wash-2), transparent 70%);
+    background-repeat: no-repeat;
+    color: var(--txt);
+    font-family: var(--font);
+    line-height: 1.47;
+    letter-spacing: -0.011em;
+    -webkit-font-smoothing: antialiased;
+    padding-inline: 16px;
+  }
+
+  .wrap {
+    max-width: 600px;
+    margin-inline: auto;
+    padding-block: clamp(40px, 9vh, 88px) 40px;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Encabezado */
+  header { text-align: center; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 600; color: var(--txt-2);
+  }
+  .eyebrow i {
+    width: 22px; height: 22px; border-radius: 6px; background: var(--msg-green);
+    display: grid; place-items: center;
+  }
+  .eyebrow svg { width: 13px; height: 13px; fill: #fff; }
+  h1 {
+    margin: 14px 0 0;
+    font-size: clamp(46px, 14vw, 76px);
+    line-height: 1.03;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  .lead {
+    margin: 14px auto 0;
+    max-width: 28ch;
+    font-size: clamp(18px, 5vw, 22px);
+    line-height: 1.35;
+    letter-spacing: -0.018em;
+    color: var(--txt-2);
+    text-wrap: balance;
+  }
+
+  /* Contactos */
+  .group {
+    list-style: none; margin: clamp(32px, 6vh, 52px) 0 0; padding: 0;
+    background: var(--surface);
+    border-radius: 22px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .group li + li { border-top: 1px solid var(--line); margin-left: 80px; }
+  .row {
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px 20px; min-height: 84px;
+    margin-left: 0;
+    color: inherit; text-decoration: none;
+    transition: background-color .18s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .group li + li .row { margin-left: -80px; padding-left: 20px; }
+  .row:hover { background: var(--press); }
+  .row:active { background: var(--press); }
+  .row:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; border-radius: 22px; }
+
+  .icon {
+    flex: none; width: 48px; height: 48px; border-radius: 11px;
+    background: var(--msg-green);
+    display: grid; place-items: center;
+  }
+  .icon svg { width: 27px; height: 27px; fill: #fff; }
+
+  .info { flex: 1; min-width: 0; display: block; }
+  .name { display: block; font-size: 18px; font-weight: 600; line-height: 1.25; letter-spacing: -0.02em; }
+  .num { display: block; margin-top: 1px; font-size: 15px; color: var(--txt-2); font-variant-numeric: tabular-nums; }
+
+  .go {
+    flex: none; display: inline-flex; align-items: center; gap: 6px;
+    min-height: 32px; padding: 0 14px; border-radius: 980px;
+    background: var(--accent); color: var(--on-accent);
+    font-size: 15px; font-weight: 500; letter-spacing: -0.01em;
+  }
+  .row:hover .go { background: var(--accent-hover); }
+
+  /* Pago */
+  .pay {
+    position: relative; overflow: hidden;
+    margin-top: 16px;
+    padding: 28px 24px 24px;
+    border-radius: 22px;
+    background: linear-gradient(150deg, var(--card-1), var(--card-2));
+    color: var(--card-txt);
+    box-shadow: var(--shadow);
+  }
+  .pay::after {
+    content: ""; position: absolute; inset: -40% -20% auto auto;
+    width: 70%; aspect-ratio: 1; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255,255,255,.10), transparent);
+    pointer-events: none;
+  }
+  .pay > * { position: relative; z-index: 1; }
+  .pay-label { font-size: 13px; font-weight: 600; color: var(--card-txt-2); letter-spacing: .02em; text-transform: uppercase; }
+  .alias {
+    margin: 22px 0 26px;
+    font-size: clamp(27px, 8.2vw, 40px);
+    font-weight: 700; line-height: 1.08; letter-spacing: -0.025em;
+    overflow-wrap: anywhere; user-select: all; -webkit-user-select: all;
+  }
+  .pay-foot { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+  .hint { font-size: 14px; color: var(--card-txt-2); max-width: 22ch; line-height: 1.35; }
+  .btn {
+    font: inherit; font-size: 16px; font-weight: 500; letter-spacing: -0.01em;
+    min-height: 44px; padding: 0 22px; border: 0; border-radius: 980px; cursor: pointer;
+    background: var(--card-btn); color: var(--card-btn-txt);
+    transition: transform .12s ease, opacity .18s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn:hover { opacity: .9; }
+  .btn:active { transform: scale(.97); }
+  .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+  @media (max-width: 400px) {
+    .group li + li { margin-left: 72px; }
+    .group li + li .row { margin-left: -72px; }
+    .row { padding-inline: 16px; gap: 14px; }
+    .group li + li .row { padding-left: 16px; }
+    .icon { width: 44px; height: 44px; }
+    .go { padding: 0 12px; }
+    .pay-foot { flex-direction: column; align-items: stretch; }
+    .hint { max-width: none; }
+    .btn { width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <span class="eyebrow"><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.8 2 11.5c0 2.3 1.1 4.4 3 5.9-.2 1.2-.8 2.4-1.8 3.4 1.8-.1 3.3-.8 4.4-1.7 1.3.4 2.7.6 4.4.6 5.5 0 10-3.8 10-8.5S17.500 3 12 3Z"/></svg></i>WhatsApp</span>
+    <h1>Hablemos.</h1>
+    <p class="lead">Elegí con quién querés comunicarte.</p>
+  </header>
+
+  <ul class="group" aria-label="Contactos de WhatsApp">
+    <li>
+      <a class="row" href="https://wa.me/543764291807" target="_blank" rel="noopener">
+        <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.8 2 11.5c0 2.3 1.1 4.4 3 5.9-.2 1.2-.8 2.4-1.8 3.4 1.8-.1 3.3-.8 4.4-1.7 1.3.4 2.7.6 4.4.6 5.5 0 10-3.800 10-8.500S17.500 3 12 3Z"/></svg></span>
+        <span class="info"><span class="name">Espacio Mimar T</span><span class="num">3764 29-1807</span></span>
+        <span class="go">Escribir</span>
+      </a>
+    </li>
+    <li>
+      <a class="row" href="https://wa.me/543757528702" target="_blank" rel="noopener">
+        <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.8 2 11.5c0 2.3 1.1 4.4 3 5.9-.2 1.2-.8 2.4-1.8 3.4 1.8-.1 3.3-.8 4.4-1.7 1.3.4 2.7.6 4.4.6 5.5 0 10-3.800 10-8.500S17.500 3 12 3Z"/></svg></span>
+        <span class="info"><span class="name">Farmacia Central</span><span class="num">3757 52-8702</span></span>
+        <span class="go">Escribir</span>
+      </a>
+    </li>
+    <li>
+      <a class="row" href="https://wa.me/543764291142" target="_blank" rel="noopener">
+        <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.8 2 11.5c0 2.3 1.1 4.4 3 5.9-.2 1.2-.8 2.4-1.8 3.4 1.8-.1 3.3-.8 4.4-1.7 1.3.4 2.7.6 4.4.6 5.5 0 10-3.800 10-8.500S17.500 3 12 3Z"/></svg></span>
+        <span class="info"><span class="name">Camila</span><span class="num">3764 29-1142</span></span>
+        <span class="go">Escribir</span>
+      </a>
+    </li>
+  </ul>
+
+  <section class="pay" aria-labelledby="pay-label">
+    <p class="pay-label" id="pay-label">Alias para pagar tus compras</p>
+    <p class="alias" id="alias">VENUS.SOL.RAIZ</p>
+    <div class="pay-foot">
+      <p class="hint">Transferí desde tu app de banco o billetera.</p>
+      <button class="btn" id="copy" type="button">Copiar alias</button>
+    </div>
+  </section>
+</main>
+
+<script>
+  (function () {
+    var btn = document.getElementById('copy');
+    var alias = document.getElementById('alias');
+    btn.addEventListener('click', function () {
+      var text = alias.textContent.trim();
+      function done(msg) {
+        btn.textContent = msg;
+        setTimeout(function () { btn.textContent = 'Copiar alias'; }, 2000);
+      }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(alias);
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        done('Seleccionado, copialo');
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done('Copiado ✓'); }, fallback);
+      } else { fallback(); }
+    });
+  })();
+</script>
+</body>
+</html>
